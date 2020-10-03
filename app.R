@@ -10,7 +10,8 @@ library(tidyverse)
 # mals o codigo feio kkkkkk
 
 
-dados<-readr::read_csv("MODIS_C6_South_America_24h.csv")
+dados<-readr::read_csv("MODIS_C6_Global_24h.csv")
+dados1<-readr::read_csv("MODIS_C6_South_America_24h.csv")
 dados2<-readr::read_csv("fire_nrt_J1V-C2_157510.csv")
 dados3<-readr::read_csv("fire_nrt_M6_157509.csv")
 dados4<-readr::read_csv("fire_nrt_V1_157511.csv")
@@ -19,7 +20,7 @@ dados <- dados %>% drop_na(latitude,longitude)
 ui <- fluidPage(
   
   
-  navbarPage("Fogooooooooooo", id="nav",
+  navbarPage("Incêndios no Mundo", id="nav",
              tabPanel("Mapa Interativo",
                       div(class="outer",
                           tags$head(
@@ -33,7 +34,7 @@ ui <- fluidPage(
                                         draggable = TRUE, top = 60, left = "auto", right = 20, bottom = "auto",
                                         width = 330, height = "auto",
                                         
-                                        h2("Mapa interativo do FOGOOOO"),
+                                        hde2("Incêndios no mundo hoje"),
                                         
                                         #radioButtons("radio", h3("Listar por"),
                                         #             choices = list("Cidades" = 1, "Estados" = 0),
@@ -69,7 +70,7 @@ server <- function(input, output, session) {
   output$map <- renderLeaflet({
     leaflet() %>%
       addTiles(attribution = 'Dados extraídos do MODIS <a href="http://brasil.io/">da nada</a>') %>%  
-      setView(lng =  -47.9292, lat = -15.7801, zoom = 4)
+      setView(lng =  -47.9292, lat = -15.7801, zoom = 3)
   })
   
   
@@ -78,7 +79,7 @@ server <- function(input, output, session) {
     #colorBy <- dados_mapa
     #sizeBy <- input$color
     #if(input$radio == 1)
-      zipdata <- dados3 %>% filter(confidence > 85)
+      zipdata <- dados %>% filter(confidence > 85)
     #else
      # zipdata <- dados #%>% filter(place_type == "state")
     
