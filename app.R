@@ -3,8 +3,14 @@ library(leaflet)
 library(RColorBrewer)
 library(tidyverse)
 
+# CODIGO DO APP EM SHINY QUE MONITORA AS QUEIMADAS NO BRASIL,
+# ATUALIZADO COM OS DADOS DO MODIS
+# SPACE APPS NASA
+# TEAM ESTAT 020 ICMC (WORKING TITLE)
+# mals o codigo feio kkkkkk
 
-dados1<-readr::read_csv("MODIS_C6_South_America_24h.csv")
+
+dados<-readr::read_csv("MODIS_C6_South_America_24h.csv")
 dados2<-readr::read_csv("fire_nrt_J1V-C2_157510.csv")
 dados3<-readr::read_csv("fire_nrt_M6_157509.csv")
 dados4<-readr::read_csv("fire_nrt_V1_157511.csv")
@@ -62,29 +68,29 @@ server <- function(input, output, session) {
   # Create the map
   output$map <- renderLeaflet({
     leaflet() %>%
-      addTiles(attribution = 'Dados extraídos do site <a href="http://brasil.io/">brasil.io</a>') %>%  
+      addTiles(attribution = 'Dados extraídos do MODIS <a href="http://brasil.io/">da nada</a>') %>%  
       setView(lng =  -47.9292, lat = -15.7801, zoom = 4)
   })
   
   
   # observer que mantém os circulos e a legenda de acordo com as variaveis escolhidas pelo usr
   observe({
-    #colorBy <- input$color
+    #colorBy <- dados_mapa
     #sizeBy <- input$color
     #if(input$radio == 1)
-      zipdata <- dados #%>% filter(place_type == "city")
+      zipdata <- dados3 %>% filter(confidence > 85)
     #else
      # zipdata <- dados #%>% filter(place_type == "state")
     
     #colorData <- zipdata[[colorBy]]
     #pal <- colorBin("viridis", colorData, 5, pretty = FALSE)
-    
+    #  dados_mapa <- dados3 %>% filter(confidence > 85)
     
     #radius <- zipdata[[sizeBy]] / max(zipdata[[sizeBy]]) * 100
     #browser()
     leafletProxy("map", data = zipdata) %>%
       clearMarkers() %>%
-    addCircles(~longitude, ~latitude, radius=0.5,# layerId=~city_ibge_code,
+    addCircleMarkers(~longitude, ~latitude, radius=0.5,# layerId=~city_ibge_code,
                        stroke=FALSE, fillOpacity=0.4, fillColor="red")# %>%
       #addLegend("bottomright", pal=pal, values=colorData, title=colorBy,
        #         layerId="colorLegend")
